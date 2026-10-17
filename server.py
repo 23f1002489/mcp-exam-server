@@ -4,6 +4,9 @@ import os
 from contextvars import ContextVar
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import (
+    TransportSecuritySettings,
+)
 import uvicorn
 
 EMAIL = "23f1002489@ds.study.iitm.ac.in".strip().lower()
@@ -12,11 +15,25 @@ challenge_context = ContextVar(
     "exam_challenge", default=None
 )
 
+# mcp = FastMCP(
+#     "Exam Challenge Server",
+#     stateless_http=True,
+#     json_response=True,
+#     streamable_http_path="/mcp",
+# )
 mcp = FastMCP(
     "Exam Challenge Server",
     stateless_http=True,
     json_response=True,
     streamable_http_path="/mcp",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=[
+            "localhost:*",
+            "127.0.0.1:*",
+            "mcp-exam-server-71dy.onrender.com",
+        ],
+    ),
 )
 
 
